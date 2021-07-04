@@ -1,6 +1,31 @@
 .customButton {
-    background-color: #3f51b5 !important;
-    color: #fff !important;
-    font-weight: bold !important;
-    border-radius: 6px !important;
+  background-color: #3f51b5 !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  border-radius: 6px !important;
+  min-width: 0px !important;
+  box-sizing: border-box !important;
+}
+
+.smallButton {
+  height: 25px !important;
+  font-size: 12px !important;
+}
+
+.redBackground {
+  background-color: #ee0c2a !important;
+}
+
+.outlined {
+  background-color: transparent !important;
+  border: 2px solid #3f51b5 !important;
+  color: #3f51b5 !important;
+}
+
+.transparentBackground {
+  color: #333 !important;
+}
+
+.transparentBackground .MuiButton-text {
+  padding: 0px !important;
 }

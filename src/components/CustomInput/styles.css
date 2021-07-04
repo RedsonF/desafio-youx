@@ -1,0 +1,12 @@
+.customInput {
+  border-radius: 6px;
+}
+
+.customInput input {
+  height: 40px;
+  padding: 0px 14px;
+}
+
+.customInput label {
+  top: 0px;
+}
