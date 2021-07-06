@@ -11,6 +11,7 @@ body,
   display: flex;
   overflow: hidden;
   padding-top: 68px;
+  box-sizing: border-box;
 }
 
 @font-face {
