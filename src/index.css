@@ -6,6 +6,13 @@ body,
   background-color: #f8f8f8;
 }
 
+#content {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  padding-top: 68px;
+}
+
 @font-face {
   font-family: "Montserrat";
   src: url("./fonts/Montserrat-Medium.ttf");

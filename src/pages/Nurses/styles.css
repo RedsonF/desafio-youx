@@ -1,5 +1,7 @@
 .home {
+  width: 100%;
   padding: 20px 30px;
+  overflow-y: auto;
 }
 
 .headerHome {
@@ -7,19 +9,26 @@
   justify-content: space-between;
 }
 
-.headerPatients {
+.headerNurses {
+  display: flex;
+  justify-content: center;
+}
+
+.headerNurses > div {
   display: flex;
   margin-top: 40px;
+  width: 100%;
+  max-width: 1000px;
   gap: 15px;
   text-align: center;
   font-weight: bold;
   padding: 10px;
   background-color: #e7e7e7;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #b6b6b6;
   border-radius: 6px;
 }
 
-.headerPatients > div {
+.headerNurses > div > div {
   flex: 1;
 }
 

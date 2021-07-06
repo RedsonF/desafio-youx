@@ -12,7 +12,7 @@ const Index = () => {
   const patients = [
     { name: 'Redson Farias Barbosa Filho', cpf: '707.404.450-80', date: '23/04/1997', weight: 68, height: 176, uf: 'PB' },
     { name: 'Dimas Wesley Farias de Araújo', cpf: '706.404.451-80', date: '09/11/1996', weight: 75, height: 180, uf: 'PB' },
-    { name: 'José Roberto da Silva', cpf: '708.404.450-80', date: '04/11/2000', weight: 60, height: 172, uf: 'PB' }
+    { name: 'José Roberto da Silva', cpf: '708.404.450-80', date: '04/11/2000', weight: 60, height: 172, uf: 'PB' },
   ]
   const [addModal, setAddModal] = useState(false);
   const [name, setName] = useState({ value: '', invalidity: '' });

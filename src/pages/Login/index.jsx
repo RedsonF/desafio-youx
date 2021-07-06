@@ -1,8 +1,13 @@
 import React from 'react';
+import './styles.css'
 
 const Index = () => {
   return (
-    <h1>Login</h1>
+    <div id="login">
+      <div id="contentLogin">
+
+      </div>
+    </div>
   );
 }
 

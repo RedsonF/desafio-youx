@@ -5,9 +5,9 @@ import Typography from '@material-ui/core/Typography';
 const Index = () => {
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Toolbar>
-        <Typography variant="h6" style={{ textAlign: 'center', flexGrow: 1 }}>
+        <Typography variant="h5" style={{ flexGrow: 1, fontWeight: 'bold', padding: '0 10px' }}>
           YOUX
         </Typography>
       </Toolbar>

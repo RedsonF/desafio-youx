@@ -1,13 +1,15 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Home from '../pages/Home';
+import Patients from '../pages/Patients';
+import Nurses from '../pages/Nurses';
 import Login from '../pages/Login';
 
 const Routes = () => (
   <Switch>
-    <Route path="/home" exact component={Home} />
+    <Route path="/patients" exact component={Patients} />
+    <Route path="/nurses" exact component={Nurses} />
     <Route path="/login" exact component={Login} />
-    <Redirect from="*" to="/home" />
+    <Redirect from="*" to="/login" />
   </Switch>
 );
 
