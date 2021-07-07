@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NurseCard from '../../components/NurseCard';
 import CustomButton from '../../components/CustomButton';
 import CustomModal from '../../components/CustomModal';
@@ -7,19 +7,54 @@ import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
 import './styles.css';
+import MenuItem from '@material-ui/core/MenuItem';
+import CustomSelect from "../../components/CustomSelect";
+import api from '../../services/api';
+import axios from 'axios';
 
 const Index = () => {
-  const patients = [
-    { name: 'Redson Farias Barbosa Filho', cpf: '707.404.450-80', password: '1212adsad' },
-    { name: 'Dimas Wesley Farias de Araújo', cpf: '706.404.451-80', password: 'blablabla' },
-    { name: 'José Roberto da Silva', cpf: '708.404.450-80', password: '21022020' },
-  ]
+  const [nurses, setNurses] = useState([]);
   const [addModal, setAddModal] = useState(false);
   const [name, setName] = useState({ value: '', invalidity: '' });
   const [cpf, setCpf] = useState({ value: '', invalidity: '' });
   const [password, setPassword] = useState({ value: '', invalidity: '' });
+  const [refresh, setRefresh] = useState(false);
+
+
+  useEffect(() => {
+    const getNurses = () => {
+      api
+      .get("/user/")
+      .then((response) => {
+        const newNurses = response.data;
+        console.log(newNurses)
+        setNurses(newNurses)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+    }
+
+    getNurses();
+  }, [refresh])
+
+  
+  const saveNurse = () => {
+    api
+    .post("/user/", {name: name.value, cpf: cpf.value, password: password.value})
+    .then((response) => {
+      setRefresh(!refresh)
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+    toggleAddModal();
+  }
 
   const toggleAddModal = () => {
+    setName({ value: '', invalidity: '' })
+    setCpf({ value: '', invalidity: '' })
+    setPassword({ value: '', invalidity: '' })
     setAddModal(!addModal);
   };
 
@@ -74,7 +109,7 @@ const Index = () => {
                 type="password"
               />
             </div>
-            <CustomButton>CADASTRAR</CustomButton>
+            <CustomButton onClick={saveNurse}>CADASTRAR</CustomButton>
           </div>
         </>
       </CustomModal>
@@ -95,19 +130,13 @@ const Index = () => {
         <div style={{ flex: 2 }}>
           <span>Nome</span>
         </div>
-        <div>
-          <span>CPF</span>
-        </div>
-        <div>
-          <span>Senha</span>
-        </div>
         </div>
       </div>
       <div className="patients">
-        {patients.map(patient => {
-          const { name, cpf, password } = patient;
+        {nurses.map(patient => {
+          const { name, cpf, password, id } = patient;
           return (
-            <NurseCard key={cpf} name={name} cpf={cpf} password={password} />
+            <NurseCard key={id} name={name} cpf={cpf} password={password} id={id} changeRefresh={() => setRefresh(!refresh)}/>
           );
         })}
       </div>

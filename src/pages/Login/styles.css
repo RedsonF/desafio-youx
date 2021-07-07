@@ -3,17 +3,30 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 #contentLogin {
-  width: 700px;
-  height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 300px;
   background-color: white;
-  box-shadow: 2px 4px 4px 2px #c7c7c7;
+  box-shadow: 1px 4px 4px 1px #c7c7c7;
   border-radius: 20px;
   border: 1px solid #d3d3d3;
-  padding: 15px;
+  padding: 10px;
   overflow: hidden;
   box-sizing: border-box;
   margin: 40px;
+}
+
+#contentLogin > button {
+  margin: 30px 0;
+}
+
+#contentLogin > span {
+  margin: 20px 0;
+  align-self: center;
+  font-weight: bold;
 }

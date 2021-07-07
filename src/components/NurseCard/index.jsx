@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import CustomButton from '../../components/CustomButton';
 import CustomModal from '../../components/CustomModal';
 import CustomInput from '../../components/CustomInput';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { IconButton } from "@material-ui/core";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import './styles.css';
+import api from "../../services/api";
 
 const Index = (props) => {
   const [nurseModal, setPatientModal] = useState(false);
@@ -12,6 +14,17 @@ const Index = (props) => {
   const [cpf, setCpf] = useState({ value: '', invalidity: '' });
   const [password, setPassword] = useState({ value: '', invalidity: '' });
 
+  const deleteNurse = () => {
+    api
+    .delete(`/user/${props.id}`)
+    .then((response) => {
+      props.changeRefresh();
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+    toggleNurseDeleteModal(false);
+  }
 
   const toggleNurseModal = () => {
     if (!nurseModal) {
@@ -39,9 +52,6 @@ const Index = (props) => {
   }
 
   const toggleNurseDeleteModal = () => {
-    if (!nurseDeleteModal) {
-      toggleNurseModal();
-    }
     setNurseDeleteModal(!nurseDeleteModal);
   };
 
@@ -95,7 +105,7 @@ const Index = (props) => {
           </div>
           <div className="buttonsPatientModal">
             <CustomButton onClick={toggleNurseDeleteModal} color="outlined">CANCELAR</CustomButton>
-            <CustomButton color="red">EXCLUIR</CustomButton>
+            <CustomButton onClick={deleteNurse} color="red">EXCLUIR</CustomButton>
           </div>
         </div>
       </CustomModal>
@@ -106,15 +116,18 @@ const Index = (props) => {
     <>
       {getModal()}
       {getDeleteModal()}
-      <div className="nurseCard" onClick={() => toggleNurseModal()}>
+      <div className="nurseCard">
+      <div style={{ position: "absolute", top: -5, right: -5 }}>
+          <IconButton
+            style={{ background: "#ee0c2a", padding: 0 }}
+            size="small"
+            onClick={() => toggleNurseDeleteModal()}
+          >
+            <DeleteForeverIcon style={{ fontSize: 20, color: "#fff", margin: 0 }} />
+          </IconButton>
+        </div>
           <div style={{ flex: 2 }}>
             <span>{props.name}</span>
-          </div>
-          <div>
-            <span>{props.cpf}</span>
-          </div>
-          <div>
-            <span>{props.password.split('').map(item => "*")}</span>
           </div>
       </div>
     </>

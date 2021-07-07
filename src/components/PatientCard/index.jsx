@@ -1,28 +1,48 @@
-import React, { useState } from 'react';
-import CustomButton from '../../components/CustomButton';
-import CustomModal from '../../components/CustomModal';
-import CustomInput from '../../components/CustomInput';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import './styles.css';
+import React, { useState } from "react";
+import CustomButton from "../../components/CustomButton";
+import CustomModal from "../../components/CustomModal";
+import CustomInput from "../../components/CustomInput";
+import CustomSelect from "../../components/CustomSelect";
+import { IconButton } from "@material-ui/core";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import MenuItem from '@material-ui/core/MenuItem';
+import "./styles.css";
+import api from "../../services/api";
 
 const Index = (props) => {
+  const role = localStorage.getItem("myrole");
+
+
   const [patientModal, setPatientModal] = useState(false);
   const [patientDeleteModal, setPatientDeleteModal] = useState(false);
-  const [name, setName] = useState({ value: '', invalidity: '' });
-  const [cpf, setCpf] = useState({ value: '', invalidity: '' });
-  const [date, setDate] = useState({ value: '', invalidity: '' });
-  const [weight, setWeight] = useState({ value: '', invalidity: '' });
-  const [height, setHeight] = useState({ value: '', invalidity: '' });
-  const [uf, setUf] = useState({ value: '', invalidity: '' });
+  const [name, setName] = useState({ value: "", invalidity: "" });
+  const [cpf, setCpf] = useState({ value: "", invalidity: "" });
+  const [birth_date, setDate] = useState({ value: "", invalidity: "" });
+  const [weight, setWeight] = useState({ value: "", invalidity: "" });
+  const [height, setHeight] = useState({ value: "", invalidity: "" });
+  const [uf, setUf] = useState({ value: "", invalidity: "" });
+
+  const deletePatient = () => {
+    api
+    .delete(`/patient/${props.id}`)
+    .then((response) => {
+      props.changeRefresh();
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+    togglePatientDeleteModal(false);
+
+  }
 
   const togglePatientModal = () => {
     if (!patientModal) {
-      setName({ value: props.name, invalidity: '' });
-      setCpf({ value: props.cpf, invalidity: '' });
-      setDate({ value: props.date, invalidity: '' });
-      setWeight({ value: props.weight, invalidity: '' });
-      setHeight({ value: props.height, invalidity: '' });
-      setUf({ value: props.uf, invalidity: '' });
+      setName({ value: props.name, invalidity: "" });
+      setCpf({ value: props.cpf, invalidity: "" });
+      setDate({ value: props.birth_date, invalidity: "" });
+      setWeight({ value: props.weight, invalidity: "" });
+      setHeight({ value: props.height, invalidity: "" });
+      setUf({ value: props.uf, invalidity: "" });
     }
     setPatientModal(!patientModal);
   };
@@ -30,37 +50,37 @@ const Index = (props) => {
   const changeName = (e) => {
     const { value } = e.target;
     setName({ ...name, value });
-  }
+  };
 
   const changeCpf = (e) => {
     const { value } = e.target;
     setCpf({ ...cpf, value });
-  }
+  };
 
   const changeDate = (e) => {
     const { value } = e.target;
-    setDate({ ...date, value });
-  }
+    setDate({ ...birth_date, value });
+  };
 
   const changeWeight = (e) => {
     const { value } = e.target;
     setWeight({ ...weight, value });
-  }
+  };
 
   const changeHeight = (e) => {
     const { value } = e.target;
     setHeight({ ...height, value });
-  }
+  };
 
   const changeUf = (e) => {
     const { value } = e.target;
     setUf({ ...uf, value });
-  }
+  };
 
   const togglePatientDeleteModal = () => {
-    if (!patientDeleteModal) {
-      togglePatientModal();
-    }
+    // if (!patientDeleteModal) {
+    //   togglePatientModal();
+    // }
     setPatientDeleteModal(!patientDeleteModal);
   };
 
@@ -69,12 +89,16 @@ const Index = (props) => {
       <CustomModal open={patientModal} setOpen={togglePatientModal}>
         <div className="patientModal">
           <strong>PACIENTE</strong>
-          <div style={{ alignSelf: 'flex-end', marginTop: 20 }}>
-            <CustomButton onClick={togglePatientDeleteModal} size="small" color="red">
+          <div style={{ alignSelf: "flex-end", marginTop: 20 }}>
+            <CustomButton
+              onClick={togglePatientDeleteModal}
+              size="small"
+              color="red"
+            >
               EXCLUIR <DeleteForeverIcon fontSize="small" />
             </CustomButton>
           </div>
-          <div style={{ margin: '10px 0', width: '100%' }}>
+          <div style={{ margin: "10px 0", width: "100%" }}>
             <CustomInput
               label="Nome"
               value={name.value}
@@ -89,8 +113,8 @@ const Index = (props) => {
             />
             <CustomInput
               label="Data de nascimento"
-              value={date.value}
-              error={date.invalidity}
+              value={birth_date.value}
+              error={birth_date.invalidity}
               onChange={changeDate}
             />
             <CustomInput
@@ -107,21 +131,25 @@ const Index = (props) => {
               onChange={changeHeight}
               type="number"
             />
-            <CustomInput
+            <CustomSelect
               label="UF"
               value={uf.value}
               error={uf.invalidity}
               onChange={changeUf}
-            />
+            >
+              <MenuItem value="PokerStarts">PokerStars</MenuItem>
+              </CustomSelect>
           </div>
           <div className="buttonsPatientModal">
-            <CustomButton onClick={togglePatientModal} color="outlined">CANCELAR</CustomButton>
+            <CustomButton onClick={togglePatientModal} color="outlined">
+              CANCELAR
+            </CustomButton>
             <CustomButton>SALVAR</CustomButton>
           </div>
         </div>
       </CustomModal>
     );
-  }
+  };
 
   const getDeleteModal = () => {
     return (
@@ -132,19 +160,32 @@ const Index = (props) => {
             <span>Tem certeza que deseja exlcuir o paciente {name.value}?</span>
           </div>
           <div className="buttonsPatientModal">
-            <CustomButton onClick={togglePatientDeleteModal} color="outlined">CANCELAR</CustomButton>
-            <CustomButton color="red">EXCLUIR</CustomButton>
+            <CustomButton onClick={togglePatientDeleteModal} color="outlined">
+              CANCELAR
+            </CustomButton>
+            <CustomButton onClick={deletePatient} color="red">EXCLUIR</CustomButton>
           </div>
         </div>
       </CustomModal>
     );
-  }
+  };
 
   return (
     <>
       {getModal()}
       {getDeleteModal()}
-      <div className="patientCard" onClick={() => togglePatientModal()}>
+      <div className="patientCard">
+        {role === 'DOCTOR' && (
+        <div style={{ position: "absolute", top: -5, right: -5 }}>
+        <IconButton
+          style={{ background: "#ee0c2a", padding: 0 }}
+          size="small"
+          onClick={() => togglePatientDeleteModal()}
+        >
+          <DeleteForeverIcon style={{ fontSize: 20, color: "#fff", margin: 0 }} />
+        </IconButton>
+      </div>
+        )}
         <div className="patientNameCpfCard">
           <div>
             <span>{props.name}</span>
@@ -154,7 +195,7 @@ const Index = (props) => {
           </div>
         </div>
         <div style={{ flex: 2 }}>
-          <span>{props.date}</span>
+          <span>{props.birth_date}</span>
         </div>
         <div>
           <span>{props.weight} kg</span>

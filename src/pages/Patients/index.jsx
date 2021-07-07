@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PatientCard from '../../components/PatientCard';
 import CustomButton from '../../components/CustomButton';
 import CustomModal from '../../components/CustomModal';
@@ -6,23 +6,75 @@ import CustomInput from '../../components/CustomInput';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
+import MenuItem from '@material-ui/core/MenuItem';
+import CustomSelect from "../../components/CustomSelect";
+import api from '../../services/api';
+import axios from 'axios';
+
 import './styles.css';
 
 const Index = () => {
-  const patients = [
-    { name: 'Redson Farias Barbosa Filho', cpf: '707.404.450-80', date: '23/04/1997', weight: 68, height: 176, uf: 'PB' },
-    { name: 'Dimas Wesley Farias de Araújo', cpf: '706.404.451-80', date: '09/11/1996', weight: 75, height: 180, uf: 'PB' },
-    { name: 'José Roberto da Silva', cpf: '708.404.450-80', date: '04/11/2000', weight: 60, height: 172, uf: 'PB' },
-  ]
+
+  const [patients, setPatients] = useState([]);
   const [addModal, setAddModal] = useState(false);
   const [name, setName] = useState({ value: '', invalidity: '' });
   const [cpf, setCpf] = useState({ value: '', invalidity: '' });
-  const [date, setDate] = useState({ value: '', invalidity: '' });
+  const [birth_date, setDate] = useState({ value: '', invalidity: '' });
   const [weight, setWeight] = useState({ value: '', invalidity: '' });
   const [height, setHeight] = useState({ value: '', invalidity: '' });
   const [uf, setUf] = useState({ value: '', invalidity: '' });
+  const [refresh, setRefresh] = useState(false);
+  const [ufs, setUfs] = useState([])
+
+  useEffect(() => {
+    const getPatients = () => {
+      api
+      .get("/patient/")
+      .then((response) => {
+        const newPatients = response.data;
+        console.log(newPatients)
+        setPatients(newPatients)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+    }
+    const getUfs = () => {
+      axios
+      .get("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
+      .then((response) => {
+        const newUfs = response.data.map(item => item.sigla).sort()
+        setUfs(newUfs)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+      
+    }
+    getPatients();
+    getUfs();
+  }, [refresh])
+
+  const savePatient = () => {
+    api
+    .post("/patient/", {name: name.value, cpf: cpf.value, birth_date: birth_date.value, weight: weight.value, height: height.value, uf: uf.value})
+    .then((response) => {
+      setRefresh(!refresh)
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+    toggleAddModal();
+  }
 
   const toggleAddModal = () => {
+    setName({ value: '', invalidity: '' })
+    setCpf({ value: '', invalidity: '' })
+    setDate({ value: '', invalidity: '' })
+    setWeight({ value: '', invalidity: '' })
+    setHeight({ value: '', invalidity: '' })
+    setUf({ value: '', invalidity: '' })
+
     setAddModal(!addModal);
   };
 
@@ -37,8 +89,10 @@ const Index = () => {
   }
 
   const changeDate = (e) => {
-    const { value } = e.target;
-    setDate({ ...date, value });
+    let { value } = e.target;
+    if (value.length === 2 || value.length === 5) value = value + '/'
+    if (value.length > 10) return
+    setDate({ ...birth_date, value });
   }
 
   const changeWeight = (e) => {
@@ -86,8 +140,8 @@ const Index = () => {
               />
               <CustomInput
                 label="Data de nascimento"
-                value={date.value}
-                error={date.invalidity}
+                value={birth_date.value}
+                error={birth_date.invalidity}
                 onChange={changeDate}
               />
               <CustomInput
@@ -104,14 +158,17 @@ const Index = () => {
                 onChange={changeHeight}
                 type="number"
               />
-              <CustomInput
-                label="UF"
-                value={uf.value}
-                error={uf.invalidity}
-                onChange={changeUf}
-              />
+              <CustomSelect
+              label="UF"
+              value={uf.value}
+              error={uf.invalidity}
+              onChange={changeUf}
+              >
+                {console.log(ufs)}
+                {ufs.map(item => { return <MenuItem key={item} value={item}>{item}</MenuItem>} ) }
+              </CustomSelect>
             </div>
-            <CustomButton>CADASTRAR</CustomButton>
+            <CustomButton onClick={savePatient}>CADASTRAR</CustomButton>
           </div>
         </>
       </CustomModal>
@@ -146,9 +203,9 @@ const Index = () => {
       </div>
       <div className="patients">
         {patients.map(patient => {
-          const { name, cpf, date, weight, height, uf } = patient;
+          const { name, cpf, birth_date, weight, height, uf, id } = patient;
           return (
-            <PatientCard key={cpf} name={name} cpf={cpf} date={date} weight={weight} height={height} uf={uf} />
+            <PatientCard key={id} name={name} cpf={cpf} birth_date={birth_date} weight={weight} height={height} uf={uf} id={id} changeRefresh={() => setRefresh(!refresh)}/>
           );
         })}
       </div>

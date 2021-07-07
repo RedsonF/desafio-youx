@@ -1,0 +1,16 @@
+.customSelect {
+  height: 40px;
+}
+
+.customSelect .MuiSelect-selectMenu:focus {
+  background-color: transparent !important;
+}
+
+.customFormControl .MuiInputLabel-outlined {
+  z-index: 1;
+  transform: translate(14px, 12px) scale(1);
+}
+
+.customFormControl .MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(10px, -6px) scale(0.75) !important;
+}
