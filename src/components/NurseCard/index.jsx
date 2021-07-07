@@ -8,6 +8,8 @@ import './styles.css';
 import api from "../../services/api";
 
 const Index = (props) => {
+  const role = localStorage.getItem("myrole");
+
   const [nurseModal, setPatientModal] = useState(false);
   const [nurseDeleteModal, setNurseDeleteModal] = useState(false);
   const [name, setName] = useState({ value: '', invalidity: '' });
@@ -118,13 +120,16 @@ const Index = (props) => {
       {getDeleteModal()}
       <div className="nurseCard">
       <div style={{ position: "absolute", top: -5, right: -5 }}>
-          <IconButton
+      {role === 'DOCTOR' && (
+        <IconButton
             style={{ background: "#ee0c2a", padding: 0 }}
             size="small"
             onClick={() => toggleNurseDeleteModal()}
           >
             <DeleteForeverIcon style={{ fontSize: 20, color: "#fff", margin: 0 }} />
           </IconButton>
+      )}
+          
         </div>
           <div style={{ flex: 2 }}>
             <span>{props.name}</span>
